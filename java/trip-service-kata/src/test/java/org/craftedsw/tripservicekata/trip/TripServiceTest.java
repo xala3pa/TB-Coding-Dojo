@@ -20,10 +20,12 @@ public class TripServiceTest {
     private static final Trip TO_SPAIN = new Trip();
     private User loggedInUser;
     private TripService tripService;
+    private List<Trip> friendTrips;
 
     @Before
     public void setup(){
         tripService = new TestableTripService();
+        loggedInUser = REGISTER_USER;
     }
 
     @Test(expected = UserNotLoggedInException.class)
@@ -35,27 +37,23 @@ public class TripServiceTest {
 
     @Test
     public void should_no_return_any_trips_when_users_are_not_friends() {
-        loggedInUser = REGISTER_USER;
-
         User friend = new User();
         friend.addFriend(ANOTHER_USER);
         friend.addTrip(TO_SAN_FRANCISCO);
 
-        List<Trip> friendTrips = tripService.getTripsByUser(friend);
+        friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(0));
     }
 
     @Test
     public void should_return_trips_when_users_are_friends() {
-        loggedInUser = REGISTER_USER;
-
         User friend = new User();
         friend.addFriend(loggedInUser);
         friend.addTrip(TO_SAN_FRANCISCO);
         friend.addTrip(TO_SPAIN);
 
-        List<Trip> friendTrips = tripService.getTripsByUser(friend);
+        friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(2));
     }
