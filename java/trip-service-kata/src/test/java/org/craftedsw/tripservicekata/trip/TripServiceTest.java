@@ -2,6 +2,7 @@ package org.craftedsw.tripservicekata.trip;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,11 +18,15 @@ public class TripServiceTest {
     private static final User ANOTHER_USER = new User();
     private static final Trip TO_SANFRANCISCO = new Trip();
     private User loggedInUser;
+    private TripService tripService;
+
+    @Before
+    public void setup(){
+        tripService = new TestableTripService();
+    }
 
     @Test(expected = UserNotLoggedInException.class)
     public void should_throw_an_exception_when_user_is_not_logged_in() throws Exception {
-        TripService tripService = new TestableTripService();
-
         loggedInUser = GUEST;
 
         tripService.getTripsByUser(UNUSED_USER);
@@ -29,8 +34,6 @@ public class TripServiceTest {
 
     @Test
     public void should_no_return_any_trips_when_users_are_not_friends() {
-        TripService tripService = new TestableTripService();
-
         loggedInUser = REGISTER_USER;
 
         User friend = new User();
