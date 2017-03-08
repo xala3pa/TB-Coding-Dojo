@@ -5,15 +5,19 @@ import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class TripService {
 
-    public List<Trip> getTripsByUser(User user, User loggedInUser) {
+    @Autowired
+    private TripDAO tripDAO;
+
+    public List<Trip> getFriendsTrips(User friend, User loggedInUser) {
         if (loggedInUser == null) {
             throw new UserNotLoggedInException();
         }
 
-        return user.isFriendWith(loggedInUser) ? getTripsBy(user) : noTrips();
+        return friend.isFriendWith(loggedInUser) ? getTripsBy(friend) : noTrips();
     }
 
     private ArrayList<Trip> noTrips() {
@@ -21,6 +25,6 @@ public class TripService {
     }
 
     protected List<Trip> getTripsBy(User user) {
-        return TripDAO.findTripsByUser(user);
+        return tripDAO.tripsBy(user);
     }
 }
